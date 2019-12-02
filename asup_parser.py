@@ -35,7 +35,6 @@ def start_xml_import(filename, t_val, csvfilename):
     for row in xmldict[t_val]['asup:ROW']:
         if not isinstance(row, dict):
             # w.writerow(row)
-            print('fuckyou: ' + str(row))
             continue
         if 'symlink_properties' in row.keys():
             if row['symlink_properties'] is not None:
