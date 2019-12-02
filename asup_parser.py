@@ -27,15 +27,14 @@ def start_xml_import(filename, t_val, csvfilename):
         xmlstring = f.read()
 
     out = open(csvfilename, 'w')
-    xmldict = xmltodict.parse(xmlstring, force_list='interface')
+    xmldict = xmltodict.parse(xmlstring)
     w = csv.DictWriter(out, extrasaction='ignore', delimiter='|',
                        fieldnames=csvfieldnames, dialect=csv.QUOTE_NONE)
 
-    row = {}
     for row in xmldict[t_val]['asup:ROW']:
         if not isinstance(row, dict):
-            # w.writerow(row)
-            continue
+            # fix weird parsing issue
+            row = xmldict[t_val]['asup:ROW']
         if 'symlink_properties' in row.keys():
             if row['symlink_properties'] is not None:
                 for v in row['symlink_properties'].values():
