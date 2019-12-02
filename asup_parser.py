@@ -22,11 +22,11 @@ def get_csvfieldnames(fieldnames):
     return(csvfieldnames)
 
 
-def start_xml_import(filename, t_val):
+def start_xml_import(filename, t_val, csvfilename):
     with open(filename, 'r') as f:
         xmlstring = f.read()
 
-    out = open('tempname.csv', 'w')
+    out = open(csvfilename, 'w')
     xmldict = xmltodict.parse(xmlstring, force_list='interface')
     w = csv.DictWriter(out, extrasaction='ignore', delimiter='|',
                        fieldnames=csvfieldnames, dialect=csv.QUOTE_NONE)
@@ -34,8 +34,8 @@ def start_xml_import(filename, t_val):
     row = {}
     for row in xmldict[t_val]['asup:ROW']:
         if not isinstance(row, dict):
-            print ('DEBUG' + str(row))
             # w.writerow(row)
+            print('fuckyou: ' + str(row))
             continue
         if 'symlink_properties' in row.keys():
             if row['symlink_properties'] is not None:
@@ -91,8 +91,18 @@ def start_xml_import(filename, t_val):
 
 workbook = xlsxwriter.Workbook(dest, {'strings_to_numbers': True})
 number_format = workbook.add_format({'num_format': '#,##0'})
-tabs = ['volume', 'vserver-info', 'sis_status_l', 'cifs_server_byname', 'cifs-server-option',
-        'cifs_share_byname', 'cifs-share-acl', 'export_rule_table', 'snapmirror-destination']
+
+tabs = ['volume',
+        'vserver-info',
+        'sis_status_l',
+        'export_rule_table',
+        'cifs_server_byname',
+        'cifs-server-option',
+        'cifs_share_byname',
+        'cifs-share-acl',
+        'snapmirror'
+        ]
+
 tabsdetails = {'sis_status_l':
                {'fieldnames': [
                    {'header': 'vol'},
@@ -141,18 +151,22 @@ tabsdetails = {'sis_status_l':
                    {'header': 'offline_caching'}
                ],
                    't_val': 'T_CIFS_SHARE'},
-               'snapmirror-destination':
+               'snapmirror':
                {'fieldnames': [
+                   {'header': 'vserver'},
                    {'header': 'source_path'},
                    {'header': 'destination_path'},
-                   {'header': 'relationship_id'},
+                   {'header': 'schedule'},
                    {'header': 'type'},
+                   {'header': 'policy'},
+                   {'header': 'policy_type'},
+                   {'header': 'state'},
                    {'header': 'status'},
-                   {'header': 'transfer_progress'},
-                   {'header': 'transfer_last_updated'},
-                   {'header': 'source_volume_node'}
+                   {'header': 'healthy'},
+                   {'header': 'identity_preserve'},
+                   {'header': 'lag_time'}
                ],
-                   't_val': 'T_SNAPMIRROR_DESTINATION'},
+                   't_val': 'T_SNAPMIRROR'},
                'cifs-share-acl':
                {'fieldnames': [
                    {'header': 'vserver'},
@@ -208,10 +222,11 @@ tabsdetails = {'sis_status_l':
                    {'header': 'vserver'},
                    {'header': 'ruleindex'},
                    {'header': 'policyname'},
-                   {'header': 'clientmatch'},
                    {'header': 'protocol'},
+                   {'header': 'clientmatch'},
                    {'header': 'rorule'},
                    {'header': 'rwrule'},
+                   {'header': 'anon'},
                    {'header': 'allow_suid'},
                    {'header': 'superuser'},
                    {'header': 'allow_dev'},
@@ -271,24 +286,28 @@ for tab in tabs:
     myfile = args.source + '/' + tab + '.xml'
     fieldnames = tabsdetails[tab]['fieldnames']
     t_val = tabsdetails[tab]['t_val']
+    csvfilename = tab + '.csv'
     csvfieldnames = get_csvfieldnames(fieldnames)
-    xmldict = start_xml_import(myfile, t_val)
+    xmldict = start_xml_import(myfile, t_val, csvfilename)
     worksheet = workbook.add_worksheet(tab)
 
     data = []
-    with open('tempname.csv', 'r') as csvread:
-        #rows = csv.DictReader(csvread, delimiter='|', quoting=csv.QUOTE_NONE)
-        # print ( rows)
+    with open(csvfilename, 'r') as csvread:
         rows = csvread.readlines()
 
-    for row in rows:
-        data.append(row.split('|'))
+        for row in rows:
+            data.append(row.split('|'))
 
-    rowcount = len(data) - 1
+    csvread.close()
+    rowcount = len(data) + 1
     fieldcount = len(fieldnames) - 1
 
     worksheet.add_table(0, 0, rowcount, fieldcount, {
-                        'data': data, 'columns': fieldnames, 'total_row': True})
+        'data': data,
+        'columns': fieldnames,
+        'total_row': True,
+        'name': str(t_val),
+        'autofilter': True})
 
 
 workbook.close()
