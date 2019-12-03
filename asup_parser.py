@@ -57,6 +57,7 @@ def start_xml_import(filename, t_val, csvfilename):
 
 workbook = xlsxwriter.Workbook(dest, {'strings_to_numbers': True})
 number_format = workbook.add_format({'num_format': '#,##0'})
+text_format = workbook.add_format({'num_format': '#0'})
 
 tabs = ['system-info',
         'volume',
@@ -226,12 +227,15 @@ tabsdetails = {'sis_status_l':
                    't_val': 'T_SPINFO'},
                'system-info':
                {'fieldnames': [
-                   {'header': 'system_hostname',
+                   {'header': 'system-hostname',
                     'total_function': 'count'},
-                   {'header': 'system-id'},
-                   {'header': 'system-serial-number'},
+                   {'header': 'system-id',
+                    'format': text_format},
+                   {'header': 'system-serial-number',
+                    'format': text_format},
                    {'header': 'ontap-version'},
-                   {'header': 'partner-id'},
+                   {'header': 'partner-id',
+                    'format': text_format},
                    {'header': 'partner-hostname'},
                    {'header': 'system-rev'},
                    {'header': 'system-storage-configuration'},
@@ -263,7 +267,8 @@ tabsdetails = {'sis_status_l':
                    {'header': 'sfp_vendor_name'},
                    {'header': 'sfp_part_number'},
                    {'header': 'sfp_revision'},
-                   {'header': 'sfp_serial_number'},
+                   {'header': 'sfp_serial_number',
+                    'format': text_format},
                    {'header': 'sfp_fc_capabilities'},
                    {'header': 'sfp_vendor_oui'},
                    {'header': 'wavelength'},
@@ -354,7 +359,8 @@ tabsdetails = {'sis_status_l':
                     'format': number_format,
                     'total_function': 'sum'},
                    {'header': 'os_type'},
-                   {'header': 'serial'},
+                   {'header': 'serial',
+                    'format': text_format},
                    {'header': 'uuid'},
                    {'header': 'volume_msid'},
                    {'header': 'vdisk_id'},
@@ -389,7 +395,8 @@ tabsdetails = {'sis_status_l':
                {'fieldnames': [
                    {'header': 'package',
                     'total_function': 'count'},
-                   {'header': 'serialno'},
+                   {'header': 'serialno',
+                    'format': text_format},
                    {'header': 'owner'},
                    {'header': 'descr'},
                    {'header': 'type'},
