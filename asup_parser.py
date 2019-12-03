@@ -1,7 +1,6 @@
 import argparse
 import xmltodict
 import csv
-#import json
 import xlsxwriter
 
 parser = argparse.ArgumentParser(
@@ -9,7 +8,8 @@ parser = argparse.ArgumentParser(
 parser.add_argument(
     '-s', '--source', help='path of directory containing files to parse')
 parser.add_argument(
-    '-d', '--dest', help='path of processed file. extension .xlsx will be added')
+    '-d', '--dest',
+    help='path of processed file. extension .xlsx will be added')
 args = parser.parse_args()
 dest = str(args.dest) + '.xlsx'
 
@@ -43,7 +43,10 @@ def start_xml_import(filename, t_val, csvfilename):
             if isinstance(row[curkey], dict):
                 for v in row[curkey].values():
                     for odict_values in v.values():
-                        row[curkey] = odict_values
+                        if isinstance(odict_values, list):
+                            row[curkey] = ', '.join(odict_values)
+                        else:
+                            row[curkey] = odict_values
 
         w.writerow(row)
 
@@ -63,7 +66,8 @@ tabs = ['volume',
         'cifs-server-option',
         'cifs_share_byname',
         'cifs-share-acl',
-        'snapmirror'
+        'snapmirror',
+        'snapmirror-policy'
         ]
 
 tabsdetails = {'sis_status_l':
@@ -114,6 +118,24 @@ tabsdetails = {'sis_status_l':
                    {'header': 'offline_caching'}
                ],
                    't_val': 'T_CIFS_SHARE'},
+               'snapmirror-policy':
+               {'fieldnames': [
+                   {'header': 'vserver'},
+                   {'header': 'smpolicy_name'},
+                   {'header': 'smpolicy_type'},
+                   {'header': 'smpolicy_comment'},
+                   {'header': 'smpolicy_transferpriority'},
+                   {'header': 'smpolicy_ignore_atime'},
+                   {'header': 'smpolicy_is_net_compression_enabled'},
+                   {'header': 'smpolicy_restart'},
+                   {'header': 'smpolicy_snapmirrorlabel'},
+                   {'header': 'smpolicy_keep'},
+                   {'header': 'smpolicy_preserve'},
+                   {'header': 'smpolicy_warn'},
+                   {'header': 'smpolicy_schedule'},
+                   {'header': 'smpolicy_prefix'}
+               ],
+                   't_val': 'T_SNAPMIRROR_POLICY'},
                'snapmirror':
                {'fieldnames': [
                    {'header': 'vserver'},
@@ -123,6 +145,7 @@ tabsdetails = {'sis_status_l':
                    {'header': 'type'},
                    {'header': 'policy'},
                    {'header': 'policy_type'},
+                   {'header': 'throttle'},
                    {'header': 'state'},
                    {'header': 'status'},
                    {'header': 'healthy'},
