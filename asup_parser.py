@@ -1,6 +1,7 @@
 import argparse
 import xmltodict
 import csv
+import sys
 import xlsxwriter
 
 parser = argparse.ArgumentParser(
@@ -23,8 +24,13 @@ def get_csvfieldnames(fieldnames):
 
 
 def start_xml_import(filename, t_val, csvfilename):
-    with open(filename, 'r') as f:
-        xmlstring = f.read()
+    try:
+        with open(filename, 'r') as f:
+            xmlstring = f.read()
+    except:
+        print('Warning, ' + filename + ' not found. xlsx will have empty tables',
+              file=sys.stderr)
+        return(False)
 
     out = open(csvfilename, 'w')
     xmldict = xmltodict.parse(xmlstring)
@@ -187,12 +193,12 @@ tabsdetails = {'sis_status_l':
                    {'header': 'link'},
                    {'header': 'mtu'},
                    {'header': 'mtu-admin'},
-                   {'header': 'autonegotiate_admin'},
-                   {'header': 'autonegotiate_oper'},
-                   {'header': 'duplex_admin'},
-                   {'header': 'duplex_oper'},
-                   {'header': 'flowcontrol_admin'},
-                   {'header': 'flowcontrol_oper'},
+                   {'header': 'autonegotiate-admin'},
+                   {'header': 'autonegotiate-oper'},
+                   {'header': 'duplex-admin'},
+                   {'header': 'duplex-oper'},
+                   {'header': 'flowcontrol_-dmin'},
+                   {'header': 'flowcontrol-oper'},
                    {'header': 'ifgrp'},
                    {'header': 'ifgrp-status'},
                    {'header': 'mac'},
@@ -208,11 +214,11 @@ tabsdetails = {'sis_status_l':
                    't_val': 'T_PORT'},
                'network-routes':
                {'fieldnames': [
-                   {'header': 'route-vserver',
+                   {'header': 'route_vserver',
                     'total_function': 'count'},
-                   {'header': 'route-destination'},
-                   {'header': 'route-gateway'},
-                   {'header': 'route-metric'}
+                   {'header': 'route_destination'},
+                   {'header': 'route_gateway'},
+                   {'header': 'route-_etric'}
                ],
                    't_val': 'T_ROUTES'},
                'sp-info':
@@ -785,13 +791,14 @@ for tab in tabs:
     worksheet = workbook.add_worksheet(tab)
 
     data = []
-    with open(csvfilename, 'r') as csvread:
-        rows = csvread.readlines()
+    if xmldict is not False :
+        with open(csvfilename, 'r') as csvread:
+            rows = csvread.readlines()
 
-        for row in rows:
-            data.append(row.split('|'))
+            for row in rows:
+                data.append(row.split('|'))
 
-    csvread.close()
+                csvread.close()
     rowcount = len(data) + 1
     fieldcount = len(fieldnames) - 1
 
