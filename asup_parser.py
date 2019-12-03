@@ -58,7 +58,8 @@ def start_xml_import(filename, t_val, csvfilename):
 workbook = xlsxwriter.Workbook(dest, {'strings_to_numbers': True})
 number_format = workbook.add_format({'num_format': '#,##0'})
 
-tabs = ['volume',
+tabs = ['system-info',
+        'volume',
         'vserver-info',
         'aggr-info',
         'aggr-efficiency',
@@ -76,12 +77,22 @@ tabs = ['volume',
         'fpolicy-server-status',
         'snapmirror-policy',
         'broadcast-domain',
+        'subnet',
         'ipspaces',
         'ifgrps',
         'network-interface',
         'network-ports',
         'network-routes',
         'dns',
+        'fcp_adapter',
+        'iscsi-interface',
+        'iscsi',
+        'iscsi_session_brief',
+        'lun',
+        'lun_maps',
+        'igroup',
+        'snapshot_policy',
+        'sp-info',
         'licenses'
         ]
 
@@ -115,6 +126,20 @@ tabsdetails = {'sis_status_l':
                    {'header': 'broadcast_domain_ports'}
                ],
                    't_val': 'T_BROADCAST_DOMAIN'},
+               'subnet':
+               {'fieldnames': [
+                   {'header': 'subnet_name',
+                    'total_function': 'count'},
+                   {'header': 'subnet'},
+                   {'header': 'gateway'},
+                   {'header': 'ip_ranges'},
+                   {'header': 'subnet_ipspace_name'},
+                   {'header': 'subnet_broadcast_domain_name'},
+                   {'header': 'subnet_id'},
+                   {'header': 'subnet_total_count'},
+                   {'header': 'subnet_available_count'},
+               ],
+                   't_val': 'T_SUBNET'},
                'ifgrps':
                {'fieldnames': [
                    {'header': 'ifgrp-name',
@@ -186,9 +211,171 @@ tabsdetails = {'sis_status_l':
                     'total_function': 'count'},
                    {'header': 'route-destination'},
                    {'header': 'route-gateway'},
-                   {'header': 'route-metric'},
+                   {'header': 'route-metric'}
                ],
                    't_val': 'T_ROUTES'},
+               'sp-info':
+               {'fieldnames': [
+                   {'header': 'public-ip-address',
+                    'total_function': 'count'},
+                   {'header': 'mac-address'},
+                   {'header': 'service-processor-type'},
+                   {'header': 'status'},
+                   {'header': 'firmware-version'}
+               ],
+                   't_val': 'T_SPINFO'},
+               'system-info':
+               {'fieldnames': [
+                   {'header': 'system_hostname',
+                    'total_function': 'count'},
+                   {'header': 'system-id'},
+                   {'header': 'system-serial-number'},
+                   {'header': 'ontap-version'},
+                   {'header': 'partner-id'},
+                   {'header': 'partner-hostname'},
+                   {'header': 'system-rev'},
+                   {'header': 'system-storage-configuration'},
+                   {'header': 'is-all-flash-optimized'},
+                   {'header': 'is-capacity-optimized'}
+               ],
+                   't_val': 'T_SYSINFO'},
+               'fcp_adapter':
+               {'fieldnames': [
+                   {'header': 'adapter',
+                    'total_function': 'count'},
+                   {'header': 'node'},
+                   {'header': 'adapter_desc'},
+                   {'header': 'adapter_admin_status'},
+                   {'header': 'adapter_status'},
+                   {'header': 'adapter_sub_status'},
+                   {'header': 'adapter_firmware_rev'},
+                   {'header': 'adapter_hardware_rev'},
+                   {'header': 'adapter_type'},
+                   {'header': 'adapter_data_link_rate'},
+                   {'header': 'adapter_fabric_established'},
+                   {'header': 'adapter_fabric_name'},
+                   {'header': 'adapter_connection_established'},
+                   {'header': 'adapter_media_type'},
+                   {'header': 'adapter_partner_adapter'},
+                   {'header': 'adapter_standby'},
+                   {'header': 'adapter_queue_depth'},
+                   {'header': 'sfp_form_factor'},
+                   {'header': 'sfp_vendor_name'},
+                   {'header': 'sfp_part_number'},
+                   {'header': 'sfp_revision'},
+                   {'header': 'sfp_serial_number'},
+                   {'header': 'sfp_fc_capabilities'},
+                   {'header': 'sfp_vendor_oui'},
+                   {'header': 'wavelength'},
+                   {'header': 'sfp_validity'},
+                   {'header': 'connector'},
+                   {'header': 'encoding'}
+               ],
+                   't_val': 'T_FCP_ADAPTER'},
+               'iscsi':
+               {'fieldnames': [
+                   {'header': 'vserver',
+                    'total_function': 'count'},
+                   {'header': 'target_name'},
+                   {'header': 'target_alias'},
+                   {'header': 'status_admin'}
+               ],
+                   't_val': 'T_ISCSI'},
+               'iscsi-interface':
+               {'fieldnames': [
+                   {'header': 'vserver',
+                    'total_function': 'count'},
+                   {'header': 'lif'},
+                   {'header': 'sendtargets-fqdn'}
+               ],
+                   't_val': 'T_ISCSI_INTERFACE'},
+               'iscsi_session_brief':
+               {'fieldnames': [
+                   {'header': 'vserver',
+                    'total_function': 'count'},
+                   {'header': 'tpgroup'},
+                   {'header': 'tsih'},
+                   {'header': 'initiatior_alias'},
+                   {'header': 'initiatior_nodename'},
+                   {'header': 'isid'},
+                   {'header': 'connection_ids'}
+               ],
+                   't_val': 'T_ISCSI_SESSION_BRIEF'},
+               'snapshot_policy':
+               {'fieldnames': [
+                   {'header': 'v',
+                    'total_function': 'count'},
+                   {'header': 'n'},
+                   {'header': 'e'},
+                   {'header': 's'},
+                   {'header': 'c'},
+                   {'header': 'p'},
+                   {'header': 'l'},
+                   {'header': 'is_pg'},
+               ],
+                   't_val': 'T_SNAPSHOT_POLICY'},
+               'igroup':
+               {'fieldnames': [
+                   {'header': 'name',
+                    'total_function': 'count'},
+                   {'header': 'vserver'},
+                   {'header': 'uuid'},
+                   {'header': 'protocol_type'},
+                   {'header': 'os_type'},
+                   {'header': 'bound_portset'},
+                   {'header': 'initiator_name'},
+                   {'header': 'vserver_uuid'},
+                   {'header': 'delete_on_unmap'}
+               ],
+                   't_val': 'T_IGROUP'},
+               'lun_maps':
+               {'fieldnames': [
+                   {'header': 'vdisk_id',
+                    'total_function': 'count'},
+                   {'header': 'lun_id'},
+                   {'header': 'igroup_uuid'},
+                   {'header': 'volume_msid'},
+                   {'header': 'vdisk_uuid'},
+                   {'header': 'reporting_nodes'}
+               ],
+                   't_val': 'T_LUN_MAP'},
+               'lun':
+               {'fieldnames': [
+                   {'header': 'path',
+                    'total_function': 'count'},
+                   {'header': 'name'},
+                   {'header': 'vserver'},
+                   {'header': 'volume'},
+                   {'header': 'qtree'},
+                   {'header': 'size',
+                    'format': number_format,
+                    'total_function': 'sum'},
+                   {'header': 'occupied_size',
+                    'format': number_format,
+                    'total_function': 'sum'},
+                   {'header': 'os_type'},
+                   {'header': 'serial'},
+                   {'header': 'uuid'},
+                   {'header': 'volume_msid'},
+                   {'header': 'vdisk_id'},
+                   {'header': 'space_reserve'},
+                   {'header': 'space_res_honored'},
+                   {'header': 'space_alloc'},
+                   {'header': 'state'},
+                   {'header': 'online'},
+                   {'header': 'mapped'},
+                   {'header': 'block_size'},
+                   {'header': 'alignment'},
+                   {'header': 'max_resize_size',
+                    'format': number_format,
+                    'total_function': 'sum'},
+                   {'header': 'nvfail'},
+                   {'header': 'clone'},
+                   {'header': 'clone_autodeltable'},
+                   {'header': 'class'},
+                   {'header': 'has_metadata_provisioned'}
+               ],
+                   't_val': 'T_LUN'},
                'fpolicy-policy':
                {'fieldnames': [
                    {'header': 'Vserver',
