@@ -32,54 +32,19 @@ def start_xml_import(filename, t_val, csvfilename):
                        fieldnames=csvfieldnames, dialect=csv.QUOTE_NONE)
 
     for row in xmldict[t_val]['asup:ROW']:
+
+        # fix weird parsing issue
         if not isinstance(row, dict):
-            # fix weird parsing issue
             row = xmldict[t_val]['asup:ROW']
-        if 'symlink_properties' in row.keys():
-            if row['symlink_properties'] is not None:
-                for v in row['symlink_properties'].values():
+
+        # if values of a key is a further ordered dict with an embedded list
+        # flatten out and extract the list as the content of that item
+        for curkey in row.keys():
+            if isinstance(row[curkey], dict):
+                for v in row[curkey].values():
                     for odict_values in v.values():
-                        row['symlink_properties'] = odict_values
-        if 'share_properties' in row.keys():
-            if row['share_properties'] is not None:
-                for v in row['share_properties'].values():
-                    for odict_values in v.values():
-                        row['share_properties'] = odict_values
-        if 'wins_servers' in row.keys():
-            if row['wins_servers'] is not None:
-                for v in row['wins_servers'].values():
-                    for odict_values in v.values():
-                        row['wins_servers'] = odict_values
-        if 'netbios_alias' in row.keys():
-            if row['netbios_alias'] is not None:
-                for v in row['netbios_alias'].values():
-                    for odict_values in v.values():
-                        row['netbios_alias'] = odict_values
-        if 'protocol' in row.keys():
-            if row['protocol'] is not None:
-                for v in row['protocol'].values():
-                    for odict_values in v.values():
-                        row['protocol'] = odict_values
-        if 'rorule' in row.keys():
-            if row['rorule'] is not None:
-                for v in row['rorule'].values():
-                    for odict_values in v.values():
-                        row['rorule'] = odict_values
-        if 'rwrule' in row.keys():
-            if row['rwrule'] is not None:
-                for v in row['rwrule'].values():
-                    for odict_values in v.values():
-                        row['rwrule'] = odict_values
-        if 'superuser' in row.keys():
-            if row['superuser'] is not None:
-                for v in row['superuser'].values():
-                    for odict_values in v.values():
-                        row['superuser'] = odict_values
-        if 'allowed_protocols' in row.keys():
-            if row['allowed_protocols'] is not None:
-                for v in row['allowed_protocols'].values():
-                    for odict_values in v.values():
-                        row['allowed_protocols'] = odict_values
+                        row[curkey] = odict_values
+
         w.writerow(row)
 
     out.close()
