@@ -76,7 +76,8 @@ tabs = ['volume',
 
 tabsdetails = {'sis_status_l':
                {'fieldnames': [
-                   {'header': 'vol'},
+                   {'header': 'vol',
+                    'total_function': 'count'},
                    {'header': 'vs'},
                    {'header': 'path'},
                    {'header': 'logical_data_size',
@@ -95,7 +96,8 @@ tabsdetails = {'sis_status_l':
                    't_val': 'T_SIS'},
                'nfs_servers_byname':
                {'fieldnames': [
-                   {'header': 'vserver'},
+                   {'header': 'vserver',
+                    'total_function': 'count'},
                    {'header': 'v2'},
                    {'header': 'v3'},
                    {'header': 'v4.0'},
@@ -118,7 +120,8 @@ tabsdetails = {'sis_status_l':
                    't_val': 'T_VSERV_NFS'},
                'cifs_server_byname':
                {'fieldnames': [
-                   {'header': 'name'},
+                   {'header': 'name',
+                    'total_function': 'count'},
                    {'header': 'vserver'},
                    {'header': 'domain'},
                    {'header': 'domain_workgroup'},
@@ -132,7 +135,8 @@ tabsdetails = {'sis_status_l':
                    't_val': 'T_CIFS_SERVER'},
                'cifs_share_byname':
                {'fieldnames': [
-                   {'header': 'cifs_server'},
+                   {'header': 'cifs_server',
+                    'total_function': 'count'},
                    {'header': 'vserver'},
                    {'header': 'share_name'},
                    {'header': 'symlink_properties'},
@@ -147,7 +151,8 @@ tabsdetails = {'sis_status_l':
                    't_val': 'T_CIFS_SHARE'},
                'snapmirror-policy':
                {'fieldnames': [
-                   {'header': 'vserver'},
+                   {'header': 'vserver',
+                    'total_function': 'count'},
                    {'header': 'smpolicy_name'},
                    {'header': 'smpolicy_type'},
                    {'header': 'smpolicy_comment'},
@@ -165,7 +170,8 @@ tabsdetails = {'sis_status_l':
                    't_val': 'T_SNAPMIRROR_POLICY'},
                'snapmirror':
                {'fieldnames': [
-                   {'header': 'vserver'},
+                   {'header': 'vserver',
+                    'total_function': 'count'},
                    {'header': 'source_path'},
                    {'header': 'destination_path'},
                    {'header': 'schedule'},
@@ -182,18 +188,21 @@ tabsdetails = {'sis_status_l':
                    't_val': 'T_SNAPMIRROR'},
                'snapmirror-destination':
                {'fieldnames': [
-                   {'header': 'source_path'},
+                   {'header': 'source_path',
+                    'total_function': 'count'},
                    {'header': 'destination_path'},
                    {'header': 'source_volume_node'},
                    {'header': 'type'},
                    {'header': 'status'},
-                   {'header': 'transfer_progress'},
+                   {'header': 'transfer_progress',
+                    'format': number_format},
                    {'header': 'progress_last_updated'}
                ],
                    't_val': 'T_SNAPMIRROR_DESTINATION'},
                'cifs-share-acl':
                {'fieldnames': [
-                   {'header': 'vserver'},
+                   {'header': 'vserver',
+                    'total_function': 'count'},
                    {'header': 'share'},
                    {'header': 'user_or_group'},
                    {'header': 'user_group_type'},
@@ -204,7 +213,8 @@ tabsdetails = {'sis_status_l':
                    't_val': 'T_CIFS_SHARE_ACL'},
                'cifs-server-option':
                {'fieldnames': [
-                   {'header': 'vserver'},
+                   {'header': 'vserver',
+                    'total_function': 'count'},
                    {'header': 'default_unix_user'},
                    {'header': 'default_unix_group'},
                    {'header': 'wins_servers'},
@@ -225,7 +235,8 @@ tabsdetails = {'sis_status_l':
                    't_val': 'T_CIFS_SERVER_OPTIONS'},
                'vserver-info':
                {'fieldnames': [
-                   {'header': 'vserver'},
+                   {'header': 'vserver',
+                    'total_function': 'count'},
                    {'header': 'rootvolume'},
                    {'header': 'language'},
                    {'header': 'type'},
@@ -243,7 +254,8 @@ tabsdetails = {'sis_status_l':
                    't_val': 'T_VSERV'},
                'export_rule_table':
                {'fieldnames': [
-                   {'header': 'vserver'},
+                   {'header': 'vserver',
+                    'total_function': 'count'},
                    {'header': 'ruleindex'},
                    {'header': 'policyname'},
                    {'header': 'protocol'},
@@ -260,7 +272,8 @@ tabsdetails = {'sis_status_l':
                    't_val': 'T_EXPORT_POL_RULE'},
                'aggr-efficiency':
                {'fieldnames': [
-                   {'header': 'aggr'},
+                   {'header': 'aggr',
+                    'total_function': 'count'},
                    {'header': 'node'},
                    {'header': 'tlu',
                     'format': number_format,
@@ -288,7 +301,8 @@ tabsdetails = {'sis_status_l':
                    't_val': 'T_AGGR_EFFICIENCY'},
                'aggr-info':
                {'fieldnames': [
-                   {'header': 'name'},
+                   {'header': 'name',
+                    'total_function': 'count'},
                    {'header': 'node'},
                    {'header': 'home_name'},
                    {'header': 'is_home'},
@@ -347,7 +361,8 @@ tabsdetails = {'sis_status_l':
                    't_val': 'T_AGGR_INFO'},
                'volume':
                {'fieldnames': [
-                   {'header': 'vol'},
+                   {'header': 'vol',
+                    'total_function': 'count'},
                    {'header': 'vs'},
                    {'header': 'aggr'},
                    {'header': 'state'},
@@ -397,6 +412,7 @@ tabsdetails = {'sis_status_l':
                    {'header': 'clone_vol'},
                    {'header': 'is_encrypted'},
                    {'header': 'is_rdonly'},
+                   {'header': 'vsroot'},
                    {'header': 'blk_type'},
                    {'header': 'tiering_policy'},
                    {'header': 'tiering_min_cooling_days'},
