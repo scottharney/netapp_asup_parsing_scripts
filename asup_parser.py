@@ -71,7 +71,18 @@ tabs = ['volume',
         'cifs-share-acl',
         'snapmirror',
         'snapmirror-destination',
-        'snapmirror-policy'
+        'fpolicy-policy',
+        'fpolicy-event',
+        'fpolicy-server-status',
+        'snapmirror-policy',
+        'broadcast-domain',
+        'ipspaces',
+        'ifgrps',
+        'network-interface',
+        'network-ports',
+        'network-routes',
+        'dns',
+        'licenses'
         ]
 
 tabsdetails = {'sis_status_l':
@@ -94,6 +105,152 @@ tabsdetails = {'sis_status_l':
                    {'header': 'policy'}
                ],
                    't_val': 'T_SIS'},
+               'broadcast-domain':
+               {'fieldnames': [
+                   {'header': 'broadcast_domain_name',
+                    'total_function': 'count'},
+                   {'header': 'broadcast_domain_ipspace_name'},
+                   {'header': 'broadcast_domain_id'},
+                   {'header': 'broadcast_domain_mtu'},
+                   {'header': 'broadcast_domain_ports'}
+               ],
+                   't_val': 'T_BROADCAST_DOMAIN'},
+               'ifgrps':
+               {'fieldnames': [
+                   {'header': 'ifgrp-name',
+                    'total_function': 'count'},
+                   {'header': 'node'},
+                   {'header': 'distr-func'},
+                   {'header': 'lacp'},
+                   {'header': 'mac'},
+                   {'header': 'activeports'},
+                   {'header': 'ports'},
+                   {'header': 'up-ports'},
+                   {'header': 'down-ports'}
+               ],
+                   't_val': 'T_IFGRP'},
+               'network-interface':
+               {'fieldnames': [
+                   {'header': 'vif',
+                    'total_function': 'count'},
+                   {'header': 'vserver'},
+                   {'header': 'role'},
+                   {'header': 'data_protocol'},
+                   {'header': 'address'},
+                   {'header': 'inetmask'},
+                   {'header': 'home_node'},
+                   {'header': 'home_port'},
+                   {'header': 'curr_node'},
+                   {'header': 'curr_port'},
+                   {'header': 'status_oper'},
+                   {'header': 'status_admin'},
+                   {'header': 'failover_policy'},
+                   {'header': 'failover_group'},
+                   {'header': 'failover_targets'},
+                   {'header': 'firewall_policy'},
+                   {'header': 'auto_revert'},
+                   {'header': 'is_home'},
+               ],
+                   't_val': 'T_VIF'},
+               'network-ports':
+               {'fieldnames': [
+                   {'header': 'port',
+                    'total_function': 'count'},
+                   {'header': 'node'},
+                   {'header': 'role'},
+                   {'header': 'link'},
+                   {'header': 'mtu'},
+                   {'header': 'mtu-admin'},
+                   {'header': 'autonegotiate_admin'},
+                   {'header': 'autonegotiate_oper'},
+                   {'header': 'duplex_admin'},
+                   {'header': 'duplex_oper'},
+                   {'header': 'flowcontrol_admin'},
+                   {'header': 'flowcontrol_oper'},
+                   {'header': 'ifgrp'},
+                   {'header': 'ifgrp-status'},
+                   {'header': 'mac'},
+                   {'header': 'up-admin'},
+                   {'header': 'type'},
+                   {'header': 'speed-actual'},
+                   {'header': 'remote-device-id'},
+                   {'header': 'ipspace'},
+                   {'header': 'broadcast-domain'},
+                   {'header': 'health-status'},
+                   {'header': 'degraded-reason'}
+               ],
+                   't_val': 'T_PORT'},
+               'network-routes':
+               {'fieldnames': [
+                   {'header': 'route-vserver',
+                    'total_function': 'count'},
+                   {'header': 'route-destination'},
+                   {'header': 'route-gateway'},
+                   {'header': 'route-metric'},
+               ],
+                   't_val': 'T_ROUTES'},
+               'fpolicy-policy':
+               {'fieldnames': [
+                   {'header': 'Vserver',
+                    'total_function': 'count'},
+                   {'header': 'PolicyName'},
+                   {'header': 'EventsToMonitor'},
+                   {'header': 'FPolicyEngine'}
+               ],
+                   't_val': 'T_FPOLICY_POLICY'},
+               'licenses':
+               {'fieldnames': [
+                   {'header': 'package',
+                    'total_function': 'count'},
+                   {'header': 'serialno'},
+                   {'header': 'owner'},
+                   {'header': 'descr'},
+                   {'header': 'type'},
+                   {'header': 'legacy'}
+               ],
+                   't_val': 'T_LIC_V2'},
+               'fpolicy-event':
+               {'fieldnames': [
+                   {'header': 'Vserver',
+                    'total_function': 'count'},
+                   {'header': 'EventName'},
+                   {'header': 'FileOperations'},
+                   {'header': 'Filters'},
+                   {'header': 'VolumeOperation'}
+               ],
+                   't_val': 'T_FPOLICY_EVENT'},
+               'fpolicy-server-status':
+               {'fieldnames': [
+                   {'header': 'Vserver',
+                    'total_function': 'count'},
+                   {'header': 'Node'},
+                   {'header': 'PolicyName'},
+                   {'header': 'ServerStatus'},
+                   {'header': 'ServerType'},
+                   {'header': 'ConnectedSince'},
+                   {'header': 'DisconnectedSince'},
+                   {'header': 'DisconnectedReason'}
+               ],
+                   't_val': 'T_FPOLICY_SERVER_STATUS'},
+               'dns':
+               {'fieldnames': [
+                   {'header': 'vserver',
+                    'total_function': 'count'},
+                   {'header': 'domains'},
+                   {'header': 'nameservers'},
+                   {'header': 'timeout'},
+                   {'header': 'attempts'},
+                   {'header': 'is-tld-query-enabled'}
+               ],
+                   't_val': 'T_DNS'},
+               'ipspaces':
+               {'fieldnames': [
+                   {'header': 'ipspace_name',
+                    'total_function': 'count'},
+                   {'header': 'ipspace_id'},
+                   {'header': 'ipspace_ports'}
+               ],
+                   't_val': 'T_IPSPACES'},
                'nfs_servers_byname':
                {'fieldnames': [
                    {'header': 'vserver',
