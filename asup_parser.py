@@ -56,9 +56,19 @@ def start_xml_import(filename, t_val, csvfilename):
 
     for row in xmldict[t_val]['asup:ROW']:
 
-        # fix weird parsing issue
+        # fix parsing issue when a single data row is present
         if not isinstance(row, dict):
             row = xmldict[t_val]['asup:ROW']
+            for curkey in row.keys():
+                if isinstance(row[curkey], dict):
+                    for v in row[curkey].values():
+                        for odict_values in v.values():
+                            if isinstance(odict_values, list):
+                                row[curkey] = ', '.join(odict_values)
+                            else:
+                                row[curkey] = odict_values
+            w.writerow(row)
+            break
 
         # if values of a key is a further ordered dict with an embedded list
         # flatten out and extract the list as the content of that item
