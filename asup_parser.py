@@ -13,6 +13,7 @@ import xmltodict
 import csv
 import os
 import sys
+import tempfile
 import xlsxwriter
 
 parser = argparse.ArgumentParser(
@@ -22,6 +23,10 @@ parser.add_argument(
 parser.add_argument(
     '-d', '--dest',
     help='path of processed file. extension .xlsx will be added')
+parser.add_argument(
+    '-t', '--tempdir',
+    help='location to store interim generated .csv and .txt files',
+    default=tempfile.gettempdir())
 args = parser.parse_args()
 dest = str(args.dest) + '.xlsx'
 
@@ -827,8 +832,10 @@ for tab in tabs:
     myfile = args.source + '/' + tab + '.xml'
     fieldnames = tabsdetails[tab]['fieldnames']
     t_val = tabsdetails[tab]['t_val']
-    csvfilename = os.path.basename(args.source) + '_' + tab + '.csv'
-    textboxfilename = os.path.basename(args.source) + '_' + tab + '.txt'
+    csvfilename = args.tempdir + \
+        os.path.basename(args.source) + '_' + tab + '.csv'
+    textboxfilename = args.tempdir + \
+        os.path.basename(args.source) + '_' + tab + '.txt'
     csvfieldnames = get_csvfieldnames(fieldnames)
     xmldict = start_xml_import(myfile, t_val, csvfilename)
     worksheet = workbook.add_worksheet(tab)
