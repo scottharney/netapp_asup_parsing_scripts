@@ -1,6 +1,7 @@
 import argparse
 import xmltodict
 import csv
+import os
 import sys
 import xlsxwriter
 
@@ -28,8 +29,7 @@ def start_xml_import(filename, t_val, csvfilename):
         with open(filename, 'r') as f:
             xmlstring = f.read()
     except:
-        print('Warning, ' + filename + ' not found. xlsx will have empty tables',
-              file=sys.stderr)
+        print('Warning, ' + filename + ' not found', file=sys.stderr)
         return(False)
 
     out = open(csvfilename, 'w')
@@ -58,7 +58,29 @@ def start_xml_import(filename, t_val, csvfilename):
 
     out.close()
 
+    textbox_out = open(textboxfilename, 'w')
+    print ('source file =' + filename, file=textbox_out)
+    for field in xmldict[t_val]['asup:TABLE_INFO']['asup:field']:
+        print ('\ntag = ' + field['asup:tag'], file=textbox_out)
+        print ('smf_name = ' + field['asup:smf_name'], file=textbox_out)
+        print ('ui_name = ' + field['asup:ui_name'], file=textbox_out)
+
+    textbox_out.close()
+
     return(xmldict)
+
+
+def get_textbox_dimensions(contentstring):
+    x = 80
+    y = 0
+    for stringline in contentstring.splitlines():
+        y = y + 1
+        linelength = len(stringline)
+        if linelength > x:
+            x = linelength
+    x = x * 8
+    y = y * 20
+    return(x, y)
 
 
 workbook = xlsxwriter.Workbook(dest, {'strings_to_numbers': True})
@@ -785,13 +807,14 @@ for tab in tabs:
     myfile = args.source + '/' + tab + '.xml'
     fieldnames = tabsdetails[tab]['fieldnames']
     t_val = tabsdetails[tab]['t_val']
-    csvfilename = tab + '.csv'
+    csvfilename = os.path.basename(args.source) + '_' + tab + '.csv'
+    textboxfilename = os.path.basename(args.source) + '_' + tab + '.txt'
     csvfieldnames = get_csvfieldnames(fieldnames)
     xmldict = start_xml_import(myfile, t_val, csvfilename)
     worksheet = workbook.add_worksheet(tab)
 
     data = []
-    if xmldict is not False :
+    if xmldict is not False:
         with open(csvfilename, 'r') as csvread:
             rows = csvread.readlines()
 
@@ -799,6 +822,8 @@ for tab in tabs:
                 data.append(row.split('|'))
 
                 csvread.close()
+    else:
+        data = ['']
     rowcount = len(data) + 1
     fieldcount = len(fieldnames) - 1
 
@@ -808,5 +833,20 @@ for tab in tabs:
         'total_row': True,
         'name': str(t_val)})
 
+    try:
+        with open(textboxfilename, 'r') as textboxread:
+            textboxcontent = textboxread.read()
+
+            textboxread.close()
+            boxposition = 'A' + str(rowcount+3)
+            box_width, box_height = get_textbox_dimensions(textboxcontent)
+            worksheet.insert_textbox(boxposition,
+                                     textboxcontent,
+                                     {
+                                         'width': box_width,
+                                         'height': box_height})
+    except:
+        textboxcontent = 'nothing to see here\n' + myfile + ' not found'
+        worksheet.insert_textbox('A4', textboxcontent)
 
 workbook.close()
