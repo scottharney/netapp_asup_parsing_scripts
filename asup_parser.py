@@ -1,3 +1,13 @@
+"""
+asup_parser.py - Scott Harney (scotth@scottharney.com)
+
+Take the directory contents of an unzipped full NetApp body.7z
+autosupport and produce an Excel spreadsheet containing
+filterable tables and initial formulas
+
+source: https://github.com/scottharney/netapp_asup_parsing_scripts
+"""
+
 import argparse
 import xmltodict
 import csv
@@ -17,6 +27,7 @@ dest = str(args.dest) + '.xlsx'
 
 
 def get_csvfieldnames(fieldnames):
+    """get the names for each table's header"""
     csvfieldnames = []
     for fieldnamesrow in fieldnames:
         csvfieldnames.append(fieldnamesrow['header'])
@@ -25,12 +36,13 @@ def get_csvfieldnames(fieldnames):
 
 
 def start_xml_import(filename, t_val, csvfilename):
+    """ import the XML and write out a csv file for that input path"""
     try:
         with open(filename, 'r') as f:
             xmlstring = f.read()
     except:
         print('Warning, ' + filename + ' not found', file=sys.stderr)
-        return(False)
+        return(False)  # return False to key that xml input file is not found
 
     out = open(csvfilename, 'w')
     xmldict = xmltodict.parse(xmlstring)
@@ -58,6 +70,8 @@ def start_xml_import(filename, t_val, csvfilename):
 
     out.close()
 
+    # also write out contents for textboxes to a .txt
+    # this contains brief explanations for column headers
     textbox_out = open(textboxfilename, 'w')
     print ('source file =' + filename, file=textbox_out)
     for field in xmldict[t_val]['asup:TABLE_INFO']['asup:field']:
@@ -71,6 +85,7 @@ def start_xml_import(filename, t_val, csvfilename):
 
 
 def get_textbox_dimensions(contentstring):
+    """ get relative height and width to create textbox"""
     x = 80
     y = 0
     for stringline in contentstring.splitlines():
@@ -83,10 +98,13 @@ def get_textbox_dimensions(contentstring):
     return(x, y)
 
 
+# some initial setup for tables
 workbook = xlsxwriter.Workbook(dest, {'strings_to_numbers': True})
 number_format = workbook.add_format({'num_format': '#,##0'})
 text_format = workbook.add_format({'num_format': '#0'})
 
+# tabs to include in the spreadsheet names map to tabname.xml
+# in the source directory
 tabs = ['system-info',
         'volume',
         'vserver-info',
@@ -125,6 +143,8 @@ tabs = ['system-info',
         'licenses'
         ]
 
+# what goes in each table for a processed xml file. this is derived
+# directly from xml file ccontents
 tabsdetails = {'sis_status_l':
                {'fieldnames': [
                    {'header': 'vol',
@@ -822,7 +842,7 @@ for tab in tabs:
                 data.append(row.split('|'))
 
                 csvread.close()
-    else:
+    else:  # deal with missing xml input filename
         data = ['']
     rowcount = len(data) + 1
     fieldcount = len(fieldnames) - 1
@@ -845,7 +865,7 @@ for tab in tabs:
                                      {
                                          'width': box_width,
                                          'height': box_height})
-    except:
+    except:  # deal with missing xml input file
         textboxcontent = 'nothing to see here\n' + myfile + ' not found'
         worksheet.insert_textbox('A4', textboxcontent)
 
