@@ -838,6 +838,7 @@ tabsdetails = {'sis_status_l':
                }
 
 
+# Main loop
 for tab in tabs:
     myfile = args.source + '/' + tab + '.xml'
     fieldnames = tabsdetails[tab]['fieldnames']
