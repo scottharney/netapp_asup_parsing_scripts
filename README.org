@@ -1,0 +1,91 @@
+#+PROPERTY:LOGGING nil
+
+* Overview
+
+NetApp's Active IQ interfaces and tools are fantastic for gaining an
+understanding of customer systems. However, sometimes I don't have access to a
+customer's autosupport data or the customer has gone to a 3rd party support
+situation. In that case I'll request a full ~body.7z~ weekly autosu from each
+NetApp node in their enviroment. The script ~asup_parser.py~ will parse many of
+the xml files within and produce a single Excel spreadsheet of their contents.
+
+The spreadsheet consists of individual tabs with details extracted from tehir
+xml sources and are automatically placed into Excel tables with autofiltering
+enabled.  Each table has at a minimum with counts of rows currently visible.
+Several tables have sum calculations of visible fields as well. So in this way
+if you need to a summary of the used space of two or more customer data SVMs,
+you can easily calculate that.
+
+Each generated tab also contains a list of the fields included in the XML file
+and the longer UI names for each field . I do not extract every single field in
+every xml.
+
+* Contents :TOC:
+- [[#overview][Overview]]
+- [[#requirements][Requirements]]
+- [[#running-it][Running it]]
+- [[#additional-details][Additional Details]]
+- [[#modifying][Modifying]]
+- [[#to-do][To-Do]]
+
+* Requirements
+ This uses python3 . In addition to standard modules the following modules via
+  ~pip~ or ~easy_isntall~
+  - xmldict
+  - csv 
+  - xmlswriter
+  
+* Running it
+   After obtaining a body.7z create a directory typically named for the node,
+   navigate into it, and ~7z x ../body.yz~ to extract it into the current
+   directory.  You can then run the script like so:
+   
+#+BEGIN_SRC shell
+/path/to/asup_parser.py --source . --destination ../nodename -t /tmp 
+#+END_SRC
+
+If all is well this will exit back to the prompt.  The generated file will be
+one directory level up from the extracted 7zip and named ~nodename.xlsx~ .
+Additionally the ~/tmp~ directory will contain various ~nodename_xmlname.csv~
+files and text files that are an interim step used to create the final Excel.  I
+do keep these intentionally
+
+* Additional Details
+The script does attempt to handle missing files in the body.7z extraction
+gracefully.  You will see warnings and the Excel will have tabs with empty
+tables.  Fields that don't exist in the version of ONTAP you are viewing will
+simply be blank in the output tables.  It should be apparent at this point that
+if you have legacy 7mode data, this script won't work at all.
+
+Note that while the script is run against a single node's autosupport payload,
+some of the items are cluster-scoped and some by their nature are node-scoped.
+Things like volumes and luns are only shown for the relevant node. While things
+like cifs shares, vservers, etc are cluster wide.   Therefore when you want to
+look at two nodes or a larger cluster, you'll need to hand-combine some things
+for now to get a comprehensive view in a single spreadsheet.
+
+The spreadsheet tables are not automatically sized to match the field contents
+(eg 'auto column width') because the XlsxWriter python module doesn't do that.
+
+I do generate interim CSV files and I keep those.  When I was first worked with
+this I was just doing CSVs and while I could refactor to skip this entirely, I
+still find having those rawer contents available handy for other potential
+automation tasks and the like.  
+
+* Modifying
+
+The ~tabs~ list in the middle of the Excel is easy enough to understand.  Each
+tab maps to an XML file name in the asup payload.  It also maps to a key in the
+large ~tabdetails~ dict.  To get the field contents from an xml, you would look
+at an XMLs contents and update the dict or create a new dict entry accordingly.
+The version of ONTAP I used to create this initial product is 9.5.
+
+* To-Do
+
+It should be possible to process multiple subdirectories containing extracted
+body.7z content.  In that way the loop could combine node specific items such as
+volumes and luns into single tables and create a cluster wide xml in one go. 
+
+I deliberately do not have python extract 7z files via but that is technically
+possible as well. The weekly autosupport emails, however, will typically have
+them all coming from different nodes but with the same ~body.7z~ attachment name.
