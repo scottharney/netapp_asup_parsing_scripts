@@ -5,16 +5,18 @@
 NetApp's Active IQ interfaces and tools are fantastic for gaining an
 understanding of customer systems. However, sometimes I don't have access to a
 customer's autosupport data or the customer has gone to a 3rd party support
-situation. In that case I'll request a full ~body.7z~ weekly autosu from each
+situation. In that case I'll request a full ~body.7z~ weekly autosupport from each
 NetApp node in their enviroment. The script ~asup_parser.py~ will parse many of
 the xml files within and produce a single Excel spreadsheet of their contents.
 
-The spreadsheet consists of individual tabs with details extracted from tehir
+The spreadsheet consists of individual tabs with details extracted from their
 xml sources and are automatically placed into Excel tables with autofiltering
-enabled.  Each table has at a minimum with counts of rows currently visible.
-Several tables have sum calculations of visible fields as well. So in this way
-if you need to a summary of the used space of two or more customer data SVMs,
-you can easily calculate that.
+enabled. Each table has, at a minimum, counts of rows currently visible. Several
+tables have sum calculations of visible fields as well. So in this way if you
+need to a summary of the used space of two or more customer data SVMs in the
+volumes list, you can easily calculate that. ONTAP values are in raw bytes so
+it's fairly straightforward to add an additional calculation against the sums to
+get GB, GiB, etc.
 
 Each generated tab also contains a list of the fields included in the XML file
 and the longer UI names for each field . I do not extract every single field in
@@ -30,10 +32,9 @@ every xml.
 
 * Requirements
  This uses python3 . In addition to standard modules the following modules via
-  ~pip~ or ~easy_isntall~
-  - xmldict
-  - csv 
-  - xmlswriter
+  ~pip~ or ~easy_install~
+  - [[https://pypi.org/project/xmldict/][xmldict]]
+  - [[https://pypi.org/project/XlsxWriter/][xmlswriter]]
   
 * Running it
    After obtaining a body.7z create a directory typically named for the node,
