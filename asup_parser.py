@@ -88,11 +88,11 @@ def start_xml_import(filename, t_val, csvfilename):
     # also write out contents for textboxes to a .txt
     # this contains brief explanations for column headers
     textbox_out = open(textboxfilename, 'w')
-    print ('source file =' + filename, textbox_out)
+    print ('source file =' + filename, file=textbox_out)
     for field in xmldict[t_val]['asup:TABLE_INFO']['asup:field']:
-        print ('\ntag = ' + field['asup:tag'], textbox_out)
-        print ('smf_name = ' + field['asup:smf_name'], textbox_out)
-        print ('ui_name = ' + field['asup:ui_name'], textbox_out)
+        print ('\ntag = ' + field['asup:tag'], file=textbox_out)
+        print ('smf_name = ' + field['asup:smf_name'], file=textbox_out)
+        print ('ui_name = ' + field['asup:ui_name'], file=textbox_out)
 
     textbox_out.close()
 
