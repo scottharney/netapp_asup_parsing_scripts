@@ -9,11 +9,11 @@ source: https://github.com/scottharney/netapp_asup_parsing_scripts
 """
 
 import argparse
-import xmltodict
 import csv
 import os
 import sys
 import tempfile
+import xmltodict
 import xlsxwriter
 
 parser = argparse.ArgumentParser(
