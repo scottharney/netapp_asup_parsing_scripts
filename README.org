@@ -3,7 +3,7 @@
 * Overview
 
 NetApp's Active IQ interfaces and tools are fantastic for gaining an
-understanding of customer systems. However, sometimes I don't have access to a
+understanding of customer systems. However, sometimes you don't have access to a
 customer's autosupport data or the customer has gone to a 3rd party support
 situation. In that case I'll request a full ~body.7z~ weekly autosupport from each
 NetApp node in their enviroment. The script ~asup_parser.py~ will parse many of
@@ -34,7 +34,7 @@ every xml.
  This uses python3 . In addition to standard modules the following modules via
   ~pip~ or ~easy_install~
   - [[https://pypi.org/project/xmldict/][xmldict]]
-  - [[https://pypi.org/project/XlsxWriter/][xmlswriter]]
+  - [[https://pypi.org/project/XlsxWriter/][xlsxwriter]]
   
 * Running it
    After obtaining a body.7z create a directory typically named for the node,
